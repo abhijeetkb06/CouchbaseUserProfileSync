@@ -47,7 +47,7 @@ public class DatabaseManager {
 
     private static DatabaseManager instance = null;
 
-    public static String syncGatewayEndpoint = "ws://10.0.2.2:4984";
+    public static String syncGatewayEndpoint = "wss://rx8h-9-8jll-gfxg.apps.cloud.couchbase.com:4984/userprofileurl/";
 
     private ListenerToken listenerToken;
     public String currentUser = null;
@@ -177,7 +177,8 @@ public class DatabaseManager {
         config.setContinuous(true); // <3>
 
         config.setAuthenticator(new BasicAuthenticator(username, password.toCharArray())); // <4>
-        config.setChannels(Arrays.asList("channel." + username)); // <5>
+        //TODO: Configure channel and uncomment
+//        config.setChannels(Arrays.asList("channel." + username)); // <5>
         // end::replicationconfig[]
 
         // tag::replicationinit[]

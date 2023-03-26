@@ -27,13 +27,17 @@ public class LoginActivity extends AppCompatActivity {
         usernameInput = findViewById(R.id.usernameInput);
         passwordInput = findViewById(R.id.passwordInput);
 
+        //TODO: Remove
+        usernameInput.setText("demo@example.com");
+        passwordInput.setText("Password@P1");
+
         //makes logging in easier for testing
         imageView = findViewById(R.id.imageViewLogo);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 usernameInput.setText("demo@example.com");
-                passwordInput.setText("password");
+                passwordInput.setText("Password@P1");
             }
         });
     }

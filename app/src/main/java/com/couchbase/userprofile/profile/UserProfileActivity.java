@@ -142,6 +142,8 @@ public class UserProfileActivity
         // end::userprofile[]
 
         mActionListener.saveProfile(profile);
+        //TODO: Check if we need replicator here
+       // DatabaseManager.startPushAndPullReplicationForCurrentUser("demo@example.com", "Password@P1");
 
         Toast.makeText(this, "Successfully updated profile!", Toast.LENGTH_SHORT).show();
     }
