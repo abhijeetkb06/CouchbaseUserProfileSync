@@ -25,6 +25,7 @@ import com.couchbase.lite.ReplicatorType;
 import com.couchbase.lite.URLEndpoint;
 import com.couchbase.lite.ValueIndexItem;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,12 +43,12 @@ public class DatabaseManager {
     private static Database userprofileDatabase;
     private static Database universityDatabase;
 
-    private static String userProfileDbName = "userprofile";
+    private static String userProfileDbName = "userprofileurl";
     private static String universityDbName = "universities";
 
     private static DatabaseManager instance = null;
 
-    public static String syncGatewayEndpoint = "wss://rx8h-9-8jll-gfxg.apps.cloud.couchbase.com:4984/userprofileurl/";
+    public static String syncGatewayEndpoint = "wss://q-xe7kpkba5pxzj2.apps.cloud.couchbase.com:4984";
 
     private ListenerToken listenerToken;
     public String currentUser = null;
@@ -112,6 +113,7 @@ public class DatabaseManager {
             try {
                 File path = new File(context.getFilesDir().toString());
                 unzip(assetManager.open("universities.zip"), path);
+
                 universityDatabase = new Database(universityDbName, config);
                 createUniversityDatabaseIndexes();
             } catch (IOException e) {
@@ -161,13 +163,15 @@ public class DatabaseManager {
     }
 
     // tag::startPushAndPullReplicationForCurrentUser[]
-    public static void startPushAndPullReplicationForCurrentUser(String username, String password)
+    public static void startPushAndPullReplicationForCurrentUser(String username, String password, Context context)
     // end::startPushAndPullReplicationForCurrentUser[]
     {
         URI url = null;
         try {
             url = new URI(String.format("%s/%s", syncGatewayEndpoint, userProfileDbName));
+            System.out.println("URL: "+url.toString());
         } catch (URISyntaxException e) {
+            System.out.println("URL exception: "+url.toString());
             e.printStackTrace();
         }
 
@@ -176,14 +180,32 @@ public class DatabaseManager {
         config.setType(ReplicatorType.PUSH_AND_PULL); // <2>
         config.setContinuous(true); // <3>
 
+        //TODO: certificate flag
+       /* File path = new File(context.getFilesDir().toString());
+        AssetManager assetManager = context.getAssets();
+
+        InputStream stream= null;
+        try {
+            stream = assetManager.open("userprofileurl.pem");
+            byte[] fileBytes=new byte[stream.available()];
+//            stream.read(fileBytes);
+            config.setPinnedServerCertificate(fileBytes);
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
         config.setAuthenticator(new BasicAuthenticator(username, password.toCharArray())); // <4>
         //TODO: Configure channel and uncomment
 //        config.setChannels(Arrays.asList("channel." + username)); // <5>
         // end::replicationconfig[]
 
+        File dbFile = new File(context.getFilesDir(), "universities.cblite2");
+
         // tag::replicationinit[]
         replicator = new Replicator(config);
         // end::replicationinit[]
+
 
         // tag::replicationlistener[]
         replicatorListenerToken = replicator.addChangeListener(new ReplicatorChangeListener() {

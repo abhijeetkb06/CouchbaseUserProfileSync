@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
             dbMgr.openPrebuiltDatabase(context);
             dbMgr.openOrCreateDatabaseForUser(context, username);
 
-            DatabaseManager.startPushAndPullReplicationForCurrentUser(username, password);
+            DatabaseManager.startPushAndPullReplicationForCurrentUser(username, password,context);
 
             Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
