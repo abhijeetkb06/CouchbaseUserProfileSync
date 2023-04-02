@@ -2,7 +2,6 @@ package com.couchbase.userprofile.util;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.renderscript.Sampler;
 import android.util.Log;
 
 import com.couchbase.lite.BasicAuthenticator;
@@ -25,17 +24,12 @@ import com.couchbase.lite.ReplicatorType;
 import com.couchbase.lite.URLEndpoint;
 import com.couchbase.lite.ValueIndexItem;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -43,12 +37,12 @@ public class DatabaseManager {
     private static Database userprofileDatabase;
     private static Database universityDatabase;
 
-    private static String userProfileDbName = "userprofileurl";
+    private static String userProfileDbName = "userprofile";
     private static String universityDbName = "universities";
 
     private static DatabaseManager instance = null;
 
-    public static String syncGatewayEndpoint = "wss://q-xe7kpkba5pxzj2.apps.cloud.couchbase.com:4984";
+    public static String appServicesEndpoint = "wss://q-xe7kpkba5pxzj2.apps.cloud.couchbase.com:4984/userprofileurl";
 
     private ListenerToken listenerToken;
     public String currentUser = null;
@@ -168,7 +162,10 @@ public class DatabaseManager {
     {
         URI url = null;
         try {
-            url = new URI(String.format("%s/%s", syncGatewayEndpoint, userProfileDbName));
+            // This is sync gate way url
+//            url = new URI(String.format("%s/%s", appServicesEndpoint, userProfileDbName));
+            // This is app service url format
+            url = new URI(String.format("%s", appServicesEndpoint));
             System.out.println("URL: "+url.toString());
         } catch (URISyntaxException e) {
             System.out.println("URL exception: "+url.toString());

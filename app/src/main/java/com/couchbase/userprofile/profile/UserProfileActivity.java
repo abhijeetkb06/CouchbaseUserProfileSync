@@ -154,6 +154,7 @@ public class UserProfileActivity
         BitmapDrawable bmDrawable = (BitmapDrawable) imageView.getDrawable();
 
         if (bmDrawable != null) {
+
             Bitmap bitmap = bmDrawable.getBitmap();
 
             if (bitmap != null) {

@@ -30,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
         //TODO: Remove
         usernameInput.setText("demo@example.com");
         passwordInput.setText("Password@P1");
+//        usernameInput.setText("abhijeet@example.com");
+//        passwordInput.setText("Password@P1");
 
         //makes logging in easier for testing
         imageView = findViewById(R.id.imageViewLogo);
