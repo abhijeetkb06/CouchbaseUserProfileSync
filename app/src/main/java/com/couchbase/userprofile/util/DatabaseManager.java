@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.couchbase.lite.Authenticator;
 import com.couchbase.lite.BasicAuthenticator;
 import com.couchbase.lite.CouchbaseLite;
 import com.couchbase.lite.CouchbaseLiteException;
@@ -12,6 +15,9 @@ import com.couchbase.lite.DatabaseChange;
 import com.couchbase.lite.DatabaseChangeListener;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.DocumentReplication;
+import com.couchbase.lite.DocumentReplicationListener;
+import com.couchbase.lite.Endpoint;
 import com.couchbase.lite.Expression;
 import com.couchbase.lite.IndexBuilder;
 import com.couchbase.lite.ListenerToken;
@@ -42,7 +48,7 @@ public class DatabaseManager {
 
     private static DatabaseManager instance = null;
 
-    public static String appServicesEndpoint = "wss://q-xe7kpkba5pxzj2.apps.cloud.couchbase.com:4984/userprofileurl";
+    public static String appServicesEndpoint = "wss://8j33envdhdqqahi.apps.cloud.couchbase.com:4984/userprofileurl";
 
     private ListenerToken listenerToken;
     public String currentUser = null;
@@ -166,9 +172,9 @@ public class DatabaseManager {
 //            url = new URI(String.format("%s/%s", appServicesEndpoint, userProfileDbName));
             // This is app service url format
             url = new URI(String.format("%s", appServicesEndpoint));
-            System.out.println("URL: "+url.toString());
+            System.out.println("URL: " + url.toString());
         } catch (URISyntaxException e) {
-            System.out.println("URL exception: "+url.toString());
+            System.out.println("URL exception: " + url.toString());
             e.printStackTrace();
         }
 
@@ -177,27 +183,10 @@ public class DatabaseManager {
         config.setType(ReplicatorType.PUSH_AND_PULL); // <2>
         config.setContinuous(true); // <3>
 
-        //TODO: certificate flag
-       /* File path = new File(context.getFilesDir().toString());
-        AssetManager assetManager = context.getAssets();
-
-        InputStream stream= null;
-        try {
-            stream = assetManager.open("userprofileurl.pem");
-            byte[] fileBytes=new byte[stream.available()];
-//            stream.read(fileBytes);
-            config.setPinnedServerCertificate(fileBytes);
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
         config.setAuthenticator(new BasicAuthenticator(username, password.toCharArray())); // <4>
         //TODO: Configure channel and uncomment
 //        config.setChannels(Arrays.asList("channel." + username)); // <5>
         // end::replicationconfig[]
-
-        File dbFile = new File(context.getFilesDir(), "universities.cblite2");
 
         // tag::replicationinit[]
         replicator = new Replicator(config);
@@ -216,6 +205,17 @@ public class DatabaseManager {
                         || change.getReplicator().getStatus().getActivityLevel().equals(ReplicatorActivityLevel.OFFLINE)) {
                     Log.e("Rep Scheduler  Log", "ReplicationTag Stopped");
                 }
+            }
+        });
+
+        replicatorListenerToken = replicator.addDocumentReplicationListener(new DocumentReplicationListener() {
+
+            @Override
+            public void replication(@NonNull DocumentReplication replication) {
+                Log.e("Replicated Document ", "Outside");
+                replication.getDocuments().listIterator().forEachRemaining(i -> {
+                    Log.e("Replicated Document ", i.getID());
+                });
             }
         });
         // end::replicationlistener[]
