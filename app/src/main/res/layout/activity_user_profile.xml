@@ -117,6 +117,7 @@
                     android:onClick="onLogoutTapped"
                     android:id="@+id/logoutButton"
                     android:text="Log out" />
+
                 <Button
                     android:id="@+id/saveButton"
                     android:layout_width="125dp"

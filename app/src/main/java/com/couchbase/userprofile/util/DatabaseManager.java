@@ -48,7 +48,7 @@ public class DatabaseManager {
 
     private static DatabaseManager instance = null;
 
-    public static String appServicesEndpoint = "wss://8j33envdhdqqahi.apps.cloud.couchbase.com:4984/userprofileurl";
+    public static String appServicesEndpoint = "wss://dhtyoazc9mc2--fb.apps.cloud.couchbase.com:4984/userprofile";
 
     private ListenerToken listenerToken;
     public String currentUser = null;
